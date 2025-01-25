@@ -1,5 +1,6 @@
-# de
+# DE
 
+## Question 1
 ```bash
 t@t 2_DOCKER_SQL % docker run -it --entrypoint bash python:3.12.8
 Unable to find image 'python:3.12.8' locally
