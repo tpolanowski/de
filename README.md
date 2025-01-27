@@ -51,11 +51,24 @@ db:5342
 
 ## Question 3
 ```sql
-SELECT count(*) FROM public.yellow_taxi_trips
-WHERE DATE(lpep_pickup_datetime) = '2019-09-18'
-  AND DATE(lpep_dropoff_datetime) = '2019-09-18';
+SELECT 
+    count(*)
+FROM public.yellow_taxi_trips
+WHERE DATE(lpep_pickup_datetime) >= '2019-10-01'
+  AND DATE(lpep_pickup_datetime) < '2019-11-01'
+  AND trip_distance <= 1;
+
+SELECT 
+    count(*)
+FROM public.yellow_taxi_trips
+WHERE DATE(lpep_pickup_datetime) >= '2019-10-01'
+  AND DATE(lpep_pickup_datetime) < '2019-11-01'
+  AND trip_distance > 1
+  AND trip_distance <= 3;
+
+...
 ```
-15612
+104,802; 198,924; 109,603; 27,678; 35,189
 
 ## Question 4
 ```sql
@@ -67,24 +80,22 @@ GROUP BY DATE(lpep_pickup_datetime)
 ORDER BY max_trip_distance DESC
 LIMIT 1;
 ```
-2019-09-26
+2019-10-31
 
 ## Question 5
 ```sql
 SELECT 
-    z."Borough",
+    z."Zone",
     SUM(tt.total_amount) AS total_borough_amount
 FROM public.yellow_taxi_trips tt
 JOIN zones z
-    ON tt."PULocationID" = z."LocationID"  -- assuming pickup_zone_id maps to zone_id in zones table
-WHERE DATE(tt.lpep_pickup_datetime) = '2019-09-18'
-  AND z."Borough" != 'Unknown'
-GROUP BY z."Borough"
-HAVING SUM(tt.total_amount) > 50000
+    ON tt."PULocationID" = z."LocationID" 
+WHERE DATE(tt.lpep_pickup_datetime) = '2019-10-18'
+GROUP BY z."Zone"
+HAVING SUM(tt.total_amount) > 13000
 ORDER BY total_borough_amount DESC
-LIMIT 3;
 ```
-"Brooklyn" "Manhattan" "Queens"
+East Harlem North, East Harlem South, Morningside Heights
 
 ## Question 6
 ```sql
@@ -96,15 +107,15 @@ JOIN zones z_pickup
     ON tt."PULocationID" = z_pickup."LocationID" 
 JOIN zones z_drop
     ON tt."DOLocationID" = z_drop."LocationID" 
-WHERE DATE(tt.lpep_pickup_datetime) BETWEEN '2019-09-01' AND '2019-09-30'
-  AND z_pickup."Zone" = 'Astoria'
+WHERE DATE(tt.lpep_pickup_datetime) BETWEEN '2019-10-01' AND '2019-10-31'
+  AND z_pickup."Zone" = 'East Harlem North'
 GROUP BY z_drop."Borough", z_drop."Zone"
 ORDER BY max_tip_amount DESC
-LIMIT 1;
 ```
 JFK Airport
 
 ## Question 7
 ```
+terraform init, terraform apply -auto-approve, terraform destroy
 ```
 
